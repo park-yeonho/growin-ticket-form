@@ -190,15 +190,69 @@
       <input type="text" id="title" placeholder="예) VPN 접속 장애" required>
     </div>
 
-    <!-- 고객사 -->
-    <div class="field">
-      <label>🏢 고객사 <span class="required">*</span></label>
-      <input type="text" id="customer" placeholder="예) 그로윈" required>
+    <!-- 고객사 / BP사 (한 줄) -->
+    <div class="row">
+      <div class="field">
+        <label>🏢 고객사 <span class="required">*</span></label>
+        <input type="text" id="customer" placeholder="예) 그로윈" required>
+      </div>
+      <div class="field">
+        <label>🤝 BP사</label>
+        <input type="text" id="bpCompany" placeholder="예) ○○BP">
+      </div>
     </div>
 
-    <!-- 계약유형 (신규) -->
+    <!-- 메일 제목 -->
     <div class="field">
-      <label>📄 계약유형</label>
+      <label>✉️ 메일 제목</label>
+      <input type="text" id="mailSubject" placeholder="예) [그로윈] VPN 접속 장애 관련 문의">
+    </div>
+
+    <!-- 메일 전체내용 -->
+    <div class="field">
+      <label>📩 메일 전체내용</label>
+      <textarea id="mailBody" placeholder="고객 원본 메일 전체를 그대로 붙여넣으세요"></textarea>
+      <div class="hint">붙여넣은 내용은 티켓에 함께 기록되어 ClickUp Description에 들어갑니다</div>
+    </div>
+
+    <!-- 요청날짜 / 종료시간 -->
+    <div class="row">
+      <div class="field">
+        <label>📅 요청날짜</label>
+        <input type="datetime-local" id="workDateTime">
+      </div>
+      <div class="field">
+        <label>⏰ 종료시간</label>
+        <input type="datetime-local" id="endDateTime">
+      </div>
+    </div>
+
+    <!-- 야간 작업 -->
+    <div class="field">
+      <label class="checkbox-row" for="nightShift">
+        <input type="checkbox" id="nightShift">
+        <span>🌙 야간 작업 (체크 시 종료시간 = 작업시간 + 24시간 자동 설정)</span>
+      </label>
+    </div>
+
+    <!-- 회신기한 (체크 시만 표시 / ClickUp Due Date 세팅) -->
+    <div class="field" id="replyDeadlineField">
+      <label class="checkbox-row" for="replyDeadlineEnable" style="margin-bottom:0;">
+        <input type="checkbox" id="replyDeadlineEnable">
+        <span>⏳ 회신기한 설정</span>
+      </label>
+      <input type="datetime-local" id="replyDeadline" style="display:none; margin-top:10px;">
+    </div>
+
+    <!-- 장소 -->
+    <div class="field">
+      <label>📍 장소</label>
+      <input type="text" id="location" placeholder="예) 고객사 본사 / 원격 / 그로윈 사무실">
+    </div>
+
+    <!-- 계약유형 -->
+    <div class="field">
+      <label>📄 계약유형 <span class="required">*</span></label>
       <div class="pills" id="contractType">
         <div class="pill active" data-value="유지보수">🛠️ 유지보수</div>
         <div class="pill" data-value="percall">📞 Per-call</div>
@@ -213,68 +267,52 @@
       </div>
       <div class="field">
         <label>📧 요청자 이메일</label>
-        <input type="email" id="requesterEmail" placeholder="n3926694@growin.co.kr">
+        <input type="email" id="requesterEmail" placeholder="hong@growin.co.kr">
       </div>
     </div>
 
-    <!-- 작업 유형 (작업 → 문의 → 장애 순) -->
+    <!-- 기술레벨 (L1/L2/L3) -->
     <div class="field">
-      <label>🏷️ 작업 유형 <span class="required">*</span></label>
-      <div class="pills" id="workType">
-        <div class="pill active" data-value="작업">🔧 작업</div>
-        <div class="pill" data-value="문의">❓ 문의</div>
-        <div class="pill" data-value="장애">🚨 장애</div>
+      <label>🎯 기술레벨 <span class="required">*</span></label>
+      <div class="pills" id="techLevel">
+        <div class="pill active" data-value="L1">L1</div>
+        <div class="pill" data-value="L2">L2</div>
+        <div class="pill" data-value="L3">L3</div>
       </div>
     </div>
 
-    <!-- 작업 우선순위 (구 긴급도) -->
+    <!-- 회신필요항목 (복수선택, 필수) -->
     <div class="field">
-      <label>⚡ 작업 우선순위</label>
-      <div class="pills" id="urgency">
-        <div class="pill" data-value="높음">높음</div>
-        <div class="pill active" data-value="보통">보통</div>
-        <div class="pill" data-value="낮음">낮음</div>
+      <label>📨 회신필요항목 <span class="required">*</span> <span class="hint" style="display:inline; margin-left:6px;">(복수 선택 가능 · 절차서 선택 시 하위 태스크 자동 생성)</span></label>
+      <div class="pills" id="replyNeed" data-multi="true">
+        <div class="pill" data-value="작업자">👷 작업자</div>
+        <div class="pill" data-value="절차서">📋 절차서</div>
+        <div class="pill" data-value="질문답변">💬 질문답변</div>
       </div>
     </div>
 
-    <!-- 작업시간 / 종료시간 + 야간 체크박스 -->
-    <div class="row">
-      <div class="field">
-        <label>📅 작업시간</label>
-        <input type="datetime-local" id="workDateTime">
-      </div>
-      <div class="field">
-        <label>⏰ 종료시간</label>
-        <input type="datetime-local" id="endDateTime">
-      </div>
-    </div>
+    <!-- 배정인원 -->
     <div class="field">
-      <label class="checkbox-row" for="nightShift">
-        <input type="checkbox" id="nightShift">
-        <span>🌙 야간 작업 (체크 시 종료시간 = 작업시간 + 24시간 자동 설정)</span>
-      </label>
+      <label>👥 배정인원</label>
+      <input type="text" id="assignees" placeholder="예) 홍길동, 김철수">
     </div>
 
-    <!-- 절차서 요청 -->
+    <!-- 요소기술 (복수선택) -->
     <div class="field">
-      <label>📋 절차서 요청</label>
-      <div class="toggle-row">
-        <span>작업 절차서 작성/검토 필요</span>
-        <div class="switch" id="procedureToggle"></div>
+      <label>🧩 요소기술 <span class="hint" style="display:inline; margin-left:6px;">(복수 선택 가능)</span></label>
+      <div class="pills" id="techStack" data-multi="true">
+        <div class="pill" data-value="linux">🐧 Linux</div>
+        <div class="pill" data-value="HA">🔁 HA</div>
+        <div class="pill" data-value="openstack">☁️ OpenStack</div>
+        <div class="pill" data-value="K8S">⎈ K8S</div>
+        <div class="pill" data-value="OpenShift">🟥 OpenShift</div>
       </div>
     </div>
 
-    <!-- 작업 내용 -->
+    <!-- 비고 -->
     <div class="field">
-      <label>💬 작업 내용 <span class="required">*</span></label>
-      <textarea id="content" placeholder="작업 요청 상세 내용을 입력하세요" required></textarea>
-    </div>
-
-    <!-- 원본 메일 -->
-    <div class="field">
-      <label>📨 원본 메일 (선택)</label>
-      <textarea id="originalMail" placeholder="고객 원본 메일 전체를 그대로 붙여넣으세요"></textarea>
-      <div class="hint">붙여넣은 원본 메일은 티켓에 함께 기록되어 ClickUp Description에 들어갑니다</div>
+      <label>🗒️ 비고</label>
+      <textarea id="remark" placeholder="기타 참고사항"></textarea>
     </div>
 
     <button class="submit-btn" id="submitBtn">📧 티켓 메일 발송</button>
@@ -285,24 +323,48 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // ===== Pills (단일선택) =====
+  // ═══════════════════════════════════════════════════════════
+  //  설정 (배포 시 이 두 값만 채우면 됨)
+  // ═══════════════════════════════════════════════════════════
+  //  API_URL    : Apps Script 웹 앱 배포 후 발급된 /exec URL
+  //  ACCESS_KEY : Apps Script 스크립트 속성의 ACCESS_KEY 와 동일 값
+  // ───────────────────────────────────────────────────────────
+  const API_URL    = 'YOUR_APPS_SCRIPT_EXEC_URL';
+  const ACCESS_KEY = 'YOUR_ACCESS_KEY';
+  // ═══════════════════════════════════════════════════════════
+
+  // ===== Pills =====
+  // data-multi="true" 인 그룹은 복수 선택 가능, 그 외엔 단일 선택
   document.querySelectorAll('.pills').forEach(group => {
+    const isMulti = group.dataset.multi === 'true';
     group.addEventListener('click', e => {
       const pill = e.target.closest('.pill');
       if (!pill) return;
-      group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
+      if (isMulti) {
+        pill.classList.toggle('active');
+      } else {
+        group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      }
     });
   });
 
-  // ===== Toggle (절차서 요청) =====
-  const toggle = document.getElementById('procedureToggle');
-  toggle.addEventListener('click', () => toggle.classList.toggle('on'));
-
   // ===== 날짜시간 헬퍼 =====
-  const startInput = document.getElementById('workDateTime');
-  const endInput   = document.getElementById('endDateTime');
-  const nightShift = document.getElementById('nightShift');
+  const startInput   = document.getElementById('workDateTime');
+  const endInput     = document.getElementById('endDateTime');
+  const replyInput   = document.getElementById('replyDeadline');
+  const replyEnable  = document.getElementById('replyDeadlineEnable');
+  const nightShift   = document.getElementById('nightShift');
+
+  // ===== 회신기한 토글: 체크 시 입력란 노출 =====
+  replyEnable.addEventListener('change', () => {
+    replyInput.style.display = replyEnable.checked ? 'block' : 'none';
+    if (replyEnable.checked && !replyInput.value) {
+      const t = new Date();
+      t.setHours(18, 0, 0, 0);
+      replyInput.value = formatLocalDT(t);
+    }
+  });
 
   function pad(n) { return String(n).padStart(2, '0'); }
   function formatLocalDT(d) {
@@ -312,7 +374,7 @@
     return new Date(new Date(dt).getTime() + hours * 60 * 60 * 1000);
   }
 
-  // ===== 기본값: 작업시간=내일 09:00, 종료시간=내일 10:00 =====
+  // ===== 기본값: 요청날짜=내일 09:00, 종료시간=내일 10:00 (회신기한은 토글 시 채워짐) =====
   (function setDefaults() {
     const t = new Date();
     t.setDate(t.getDate() + 1);
@@ -350,43 +412,98 @@
   }
 
   // ===== Form data 수집 =====
+  function getActiveValue(groupId) {
+    return document.querySelector(`#${groupId} .pill.active`)?.dataset.value || '';
+  }
+  function getActiveValues(groupId) {
+    return Array.from(document.querySelectorAll(`#${groupId} .pill.active`))
+      .map(p => p.dataset.value);
+  }
+
   function collectFormData() {
     const startDt = startInput.value;
     const endDt   = endInput.value;
+    // 회신기한: 토글 체크된 경우만 전송 (체크 안하면 ClickUp Due Date 미설정)
+    const replyDt = replyEnable.checked ? replyInput.value : '';
+
+    const title       = document.getElementById('title').value.trim();
+    const customer    = document.getElementById('customer').value.trim();
+    const bpCompany   = document.getElementById('bpCompany').value.trim();
+    const mailSubject = document.getElementById('mailSubject').value.trim();
+    const mailBody    = document.getElementById('mailBody').value.trim();
+    const location    = document.getElementById('location').value.trim();
+    const replyNeed   = getActiveValues('replyNeed');           // 복수선택
+    const procedureSubtask = replyNeed.includes('절차서') ? 'Y' : 'N';
+
+    // ===== 비고: 야간작업 체크 시 자동 추가 =====
+    const remarkRaw = document.getElementById('remark').value.trim();
+    const nightFlag = nightShift.checked;
+    const remarkMerged = [remarkRaw, nightFlag ? '🌙 야간작업' : '']
+      .filter(Boolean)
+      .join('\n');
+
+    // ===== 캘린더용 가공 필드 =====
+    // 제목: 항상 "#[미정] " 접두어 + 작업명
+    const calendarTitle = `#[미정] ${title}`;
+    // 장소: 폼의 장소 그대로
+    const calendarLocation = location;
+    // 설명: 메일제목 + 빈 줄 + 메일전체내용
+    const calendarDescription = [mailSubject, mailBody].filter(Boolean).join('\n\n');
+
     return {
-      title: document.getElementById('title').value.trim(),
-      customer: document.getElementById('customer').value.trim(),
-      contractType: document.querySelector('#contractType .pill.active')?.dataset.value || '',
+      title,
+      customer,
+      bpCompany,
+      mailSubject,
+      mailBody,
+      contractType: getActiveValue('contractType'),
       requester: document.getElementById('requester').value.trim(),
       requesterEmail: document.getElementById('requesterEmail').value.trim(),
-      workType: document.querySelector('#workType .pill.active')?.dataset.value || '',
-      urgency: document.querySelector('#urgency .pill.active')?.dataset.value || '보통',
+      techLevel: getActiveValue('techLevel'),
       workDateTime: startDt ? startDt.replace('T', ' ') : '',
       endDateTime: endDt ? endDt.replace('T', ' ') : '',
-      nightShift: nightShift.checked ? 'Y' : 'N',
-      procedureRequest: toggle.classList.contains('on') ? 'Y' : 'N',
-      content: document.getElementById('content').value.trim(),
-      originalMail: document.getElementById('originalMail').value.trim()
+      replyDeadline: replyDt ? replyDt.replace('T', ' ') : '',
+      nightShift: nightFlag ? 'Y' : 'N',   // 캘린더 종료시각 자동설정 용도로 유지
+      location,
+      replyNeed,                  // 배열
+      procedureSubtask,           // 절차서 선택 시 하위 태스크 생성용 플래그
+      assignees: document.getElementById('assignees').value.trim(),
+      techStack: getActiveValues('techStack'),
+      remark: remarkMerged,        // 비고 (야간작업 체크 시 자동 병합)
+
+      // 캘린더 전용 가공 필드
+      calendarTitle,
+      calendarLocation,
+      calendarDescription
     };
   }
 
   function validate(data) {
     if (!data.title) return '작업명을 입력하세요';
     if (!data.customer) return '고객사를 입력하세요';
-    if (!data.workType) return '작업 유형을 선택하세요';
-    if (!data.content) return '작업 내용을 입력하세요';
+    if (!data.contractType) return '계약유형을 선택하세요';
+    if (!data.techLevel) return '기술레벨을 선택하세요';
+    if (!data.replyNeed || data.replyNeed.length === 0) return '회신필요항목을 선택하세요';
     if (data.workDateTime && data.endDateTime &&
         new Date(data.endDateTime) <= new Date(data.workDateTime)) {
-      return '종료시간은 작업시간보다 뒤여야 합니다';
+      return '종료시간은 요청날짜보다 뒤여야 합니다';
     }
     return null;
   }
 
   function resetForm() {
-    ['title','customer','requester','requesterEmail','content','originalMail']
-      .forEach(id => document.getElementById(id).value = '');
-    toggle.classList.remove('on');
+    [
+      'title','customer','bpCompany','mailSubject','mailBody',
+      'requester','requesterEmail','location','assignees','remark'
+    ].forEach(id => document.getElementById(id).value = '');
     nightShift.checked = false;
+    // 회신기한 토글 리셋
+    replyEnable.checked = false;
+    replyInput.style.display = 'none';
+    replyInput.value = '';
+    // 복수선택 pills 해제
+    document.querySelectorAll('#techStack .pill').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('#replyNeed .pill').forEach(p => p.classList.remove('active'));
   }
 
   function submit(asDraft) {
@@ -420,12 +537,10 @@
     }
 
     // === GitHub Pages 모드 (Apps Script doPost API 호출) ===
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyhTnXFa-fJtbFvH8Fd5eNs20cLLHMk6nyjJ1gp7CuVm17T9Gd8JtVb5MP6n8BVQvf9Vg/exec'; // ← 배포 후 교체
-    const ACCESS_KEY = '7dbfc17c-f1d9-4b3f-b247-83a7bb0a382c';
     fetch(API_URL, {
       method: 'POST',
-      body: JSON.stringify({ ...data, key: ACCESS_KEY })   // ← key 추가
-})
+      body: JSON.stringify({ ...data, key: ACCESS_KEY })   // ACCESS_KEY 함께 전송
+    })
     .then(r => r.json())
     .then(res => res.ok ? finishOK() : finishErr(res.error || '발송 실패'))
     .catch(e => finishErr(e.message));
