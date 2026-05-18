@@ -329,8 +329,8 @@
   //  API_URL    : Apps Script 웹 앱 배포 후 발급된 /exec URL
   //  ACCESS_KEY : Apps Script 스크립트 속성의 ACCESS_KEY 와 동일 값
   // ───────────────────────────────────────────────────────────
-  const API_URL    = 'https://script.google.com/macros/s/AKfycbyhTnXFa-fJtbFvH8Fd5eNs20cLLHMk6nyjJ1gp7CuVm17T9Gd8JtVb5MP6n8BVQvf9Vg/exec';
-  const ACCESS_KEY = '7dbfc17c-f1d9-4b3f-b247-83a7bb0a382c';
+  const API_URL    = 'YOUR_APPS_SCRIPT_EXEC_URL';
+  const ACCESS_KEY = 'YOUR_ACCESS_KEY';
   // ═══════════════════════════════════════════════════════════
 
   // ===== Pills =====
@@ -443,8 +443,10 @@
       .join('\n');
 
     // ===== 캘린더용 가공 필드 =====
-    // 제목: 항상 "#[미정] " 접두어 + 작업명
-    const calendarTitle = `#[미정] ${title}`;
+    // 제목: "#[미정] BP사 작업명" (BP사 비어있으면 BP사 자리 생략)
+    const calendarTitle = bpCompany
+      ? `#[미정] ${bpCompany} ${title}`
+      : `#[미정] ${title}`;
     // 장소: 폼의 장소 그대로
     const calendarLocation = location;
     // 설명: 메일제목 + 빈 줄 + 메일전체내용
