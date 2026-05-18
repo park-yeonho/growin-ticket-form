@@ -191,15 +191,9 @@
     </div>
 
     <!-- 고객사 / BP사 (한 줄) -->
-    <div class="row">
-      <div class="field">
-        <label>🏢 고객사 <span class="required">*</span></label>
-        <input type="text" id="customer" placeholder="예) 그로윈" required>
-      </div>
-      <div class="field">
-        <label>🤝 BP사</label>
-        <input type="text" id="bpCompany" placeholder="예) ○○BP">
-      </div>
+    <div class="field">
+      <label>🏢 고객사 <span class="required">*</span></label>
+      <input type="text" id="customer" placeholder="예) 그로윈_텔코웨어" required>
     </div>
 
     <!-- 메일 제목 -->
@@ -266,20 +260,15 @@
         <input type="text" id="requester" placeholder="홍길동">
       </div>
       <div class="field">
-        <label>📧 요청자 이메일</label>
-        <input type="email" id="requesterEmail" placeholder="hong@growin.co.kr">
+        <label>💼 영업담당자</label>
+        <input type="text" id="salesPerson" placeholder="예) 박영업">
       </div>
     </div>
 
-    <!-- 기술레벨 (L1/L2/L3) -->
-    <div class="field">
-      <label>🎯 기술레벨 <span class="required">*</span></label>
-      <div class="pills" id="techLevel">
-        <div class="pill active" data-value="L1">L1</div>
-        <div class="pill" data-value="L2">L2</div>
-        <div class="pill" data-value="L3">L3</div>
-      </div>
-    </div>
+<div class="field">
+  <label>📧 요청자 이메일</label>
+  <input type="email" id="requesterEmail" placeholder="hong@growin.co.kr">
+</div>
 
     <!-- 회신필요항목 (복수선택, 필수) -->
     <div class="field">
@@ -307,8 +296,9 @@
         <div class="pill" data-value="K8S">⎈ K8S</div>
         <div class="pill" data-value="OpenShift">🟥 OpenShift</div>
       </div>
+      <div class="hint" id="techLevelPreview" style="margin-top:8px;">기술레벨: -</div>
     </div>
-
+    
     <!-- 비고 -->
     <div class="field">
       <label>🗒️ 비고</label>
@@ -335,19 +325,35 @@ const ACCESS_KEY = '7dbfc17c-f1d9-4b3f-b247-83a7bb0a382c';
 
   // ===== Pills =====
   // data-multi="true" 인 그룹은 복수 선택 가능, 그 외엔 단일 선택
-  document.querySelectorAll('.pills').forEach(group => {
-    const isMulti = group.dataset.multi === 'true';
-    group.addEventListener('click', e => {
-      const pill = e.target.closest('.pill');
-      if (!pill) return;
-      if (isMulti) {
-        pill.classList.toggle('active');
-      } else {
-        group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-      }
-    });
+document.querySelectorAll('.pills').forEach(group => {
+  const isMulti = group.dataset.multi === 'true';
+  group.addEventListener('click', e => {
+    const pill = e.target.closest('.pill');
+    if (!pill) return;
+    if (isMulti) {
+      pill.classList.toggle('active');
+    } else {
+      group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    }
+    if (group.id === 'techStack') updateTechLevelPreview();
   });
+});
+
+const TECH_LEVEL_BY_STACK = {
+  'linux': 3, 'HA': 4, 'openstack': 7, 'K8S': 8, 'OpenShift': 9
+};
+function computeTechLevel() {
+  const stack = Array.from(document.querySelectorAll('#techStack .pill.active'))
+    .map(p => p.dataset.value);
+  const maxLv = stack.reduce((m, v) => Math.max(m, TECH_LEVEL_BY_STACK[v] || 0), 0);
+  return maxLv > 0 ? `L${maxLv}` : '';
+}
+function updateTechLevelPreview() {
+  const lv = computeTechLevel();
+  const el = document.getElementById('techLevelPreview');
+  if (el) el.textContent = '기술레벨: ' + (lv || '-');
+}
 
   // ===== 날짜시간 헬퍼 =====
   const startInput   = document.getElementById('workDateTime');
@@ -428,7 +434,7 @@ const ACCESS_KEY = '7dbfc17c-f1d9-4b3f-b247-83a7bb0a382c';
 
     const title       = document.getElementById('title').value.trim();
     const customer    = document.getElementById('customer').value.trim();
-    const bpCompany   = document.getElementById('bpCompany').value.trim();
+    const salesPerson   = document.getElementById('salesPerson').value.trim();
     const mailSubject = document.getElementById('mailSubject').value.trim();
     const mailBody    = document.getElementById('mailBody').value.trim();
     const location    = document.getElementById('location').value.trim();
@@ -442,49 +448,57 @@ const ACCESS_KEY = '7dbfc17c-f1d9-4b3f-b247-83a7bb0a382c';
       .filter(Boolean)
       .join('\n');
 
+// ===== 기술레벨 자동 산출 (요소기술 기반, max 선택) =====
+    const TECH_LEVEL_BY_STACK = {
+      'linux': 3, 'HA': 4, 'openstack': 7, 'K8S': 8, 'OpenShift': 9
+    };
+    const techStack = getActiveValues('techStack');
+    const maxLevel = techStack.reduce((m, v) => Math.max(m, TECH_LEVEL_BY_STACK[v] || 0), 0);
+    const techLevel = maxLevel > 0 ? `L${maxLevel}` : '';
+
     // ===== 캘린더용 가공 필드 =====
-    // 제목: "#[미정] BP사 작업명" (BP사 비어있으면 BP사 자리 생략)
-    const calendarTitle = bpCompany
-      ? `#[미정] ${bpCompany} ${title}`
+    // 제목: "#[미정] {고객사} {작업명}"
+    //   - 고객사 필드 값이 "고객사_최종고객사" 형태로 들어와도 _ 앞부분(고객사)만 사용
+    const customerForTitle = customer.split('_')[0].trim();
+    const calendarTitle = customerForTitle
+      ? `#[미정] ${customerForTitle} ${title}`
       : `#[미정] ${title}`;
     // 장소: 폼의 장소 그대로
     const calendarLocation = location;
     // 설명: 메일제목 + 빈 줄 + 메일전체내용
     const calendarDescription = [mailSubject, mailBody].filter(Boolean).join('\n\n');
 
-    return {
+return {
       title,
       customer,
-      bpCompany,
+      salesPerson,                // ← bpCompany → salesPerson
       mailSubject,
       mailBody,
       contractType: getActiveValue('contractType'),
       requester: document.getElementById('requester').value.trim(),
       requesterEmail: document.getElementById('requesterEmail').value.trim(),
-      techLevel: getActiveValue('techLevel'),
+      techLevel,                  // ← getActiveValue('techLevel') 제거. 위에서 자동 산출한 값 사용
       workDateTime: startDt ? startDt.replace('T', ' ') : '',
       endDateTime: endDt ? endDt.replace('T', ' ') : '',
       replyDeadline: replyDt ? replyDt.replace('T', ' ') : '',
-      nightShift: nightFlag ? 'Y' : 'N',   // 캘린더 종료시각 자동설정 용도로 유지
+      nightShift: nightFlag ? 'Y' : 'N',
       location,
-      replyNeed,                  // 배열
-      procedureSubtask,           // 절차서 선택 시 하위 태스크 생성용 플래그
+      replyNeed,
+      procedureSubtask,
       assignees: document.getElementById('assignees').value.trim(),
-      techStack: getActiveValues('techStack'),
-      remark: remarkMerged,        // 비고 (야간작업 체크 시 자동 병합)
+      techStack,                  // ← getActiveValues('techStack') 제거. 위에서 가져온 변수 사용
+      remark: remarkMerged,
 
       // 캘린더 전용 가공 필드
       calendarTitle,
       calendarLocation,
       calendarDescription
     };
-  }
 
-  function validate(data) {
+function validate(data) {
     if (!data.title) return '작업명을 입력하세요';
     if (!data.customer) return '고객사를 입력하세요';
     if (!data.contractType) return '계약유형을 선택하세요';
-    if (!data.techLevel) return '기술레벨을 선택하세요';
     if (!data.replyNeed || data.replyNeed.length === 0) return '회신필요항목을 선택하세요';
     if (data.workDateTime && data.endDateTime &&
         new Date(data.endDateTime) <= new Date(data.workDateTime)) {
@@ -493,11 +507,14 @@ const ACCESS_KEY = '7dbfc17c-f1d9-4b3f-b247-83a7bb0a382c';
     return null;
   }
 
-  function resetForm() {
+function resetForm() {
     [
-      'title','customer','bpCompany','mailSubject','mailBody',
+      'title','customer','salesPerson','mailSubject','mailBody',
       'requester','requesterEmail','location','assignees','remark'
     ].forEach(id => document.getElementById(id).value = '');
+    // 기술레벨 프리뷰 리셋
+    const preview = document.getElementById('techLevelPreview');
+    if (preview) preview.textContent = '기술레벨: -';
     nightShift.checked = false;
     // 회신기한 토글 리셋
     replyEnable.checked = false;
