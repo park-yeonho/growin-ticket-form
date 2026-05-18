@@ -552,6 +552,10 @@ fetch(API_URL, {
 })
 .then(res => res.ok ? finishOK() : finishErr(res.error || '발송 실패'))
 .catch(e => finishErr(e.message));
+}                                                                          // ← submit 함수 닫기
+
+document.getElementById('submitBtn').addEventListener('click', () => submit(false));    // ← 이거
+document.getElementById('draftLink').addEventListener('click', () => submit(true));     // ← 이거도
 </script>
 </body>
 </html>
