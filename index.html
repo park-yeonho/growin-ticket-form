@@ -539,17 +539,19 @@
     }
 
     // === GitHub Pages 모드 (Apps Script doPost API 호출) ===
-    fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({ ...data, key: ACCESS_KEY })   // ACCESS_KEY 함께 전송
-    })
-    .then(r => r.json())
-    .then(res => res.ok ? finishOK() : finishErr(res.error || '발송 실패'))
-    .catch(e => finishErr(e.message));
-  }
-
-  document.getElementById('submitBtn').addEventListener('click', () => submit(false));
-  document.getElementById('draftLink').addEventListener('click', () => submit(true));
+fetch(API_URL, {
+  method: 'POST',
+  body: JSON.stringify({ ...data, key: ACCESS_KEY })
+})
+.then(r => r.text())                                  // ← .json() 대신 .text()
+.then(txt => {
+  console.log('=== RAW RESPONSE ===');
+  console.log(txt);
+  console.log('=== END RAW ===');
+  return JSON.parse(txt);
+})
+.then(res => res.ok ? finishOK() : finishErr(res.error || '발송 실패'))
+.catch(e => finishErr(e.message));
 </script>
 </body>
 </html>
