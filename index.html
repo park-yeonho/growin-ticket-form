@@ -329,7 +329,7 @@
   //  API_URL    : Apps Script 웹 앱 배포 후 발급된 /exec URL
   //  ACCESS_KEY : Apps Script 스크립트 속성의 ACCESS_KEY 와 동일 값
   // ───────────────────────────────────────────────────────────
-const API_URL    = 'https://script.google.com/macros/s/AKfycbz9-rQvzMcGEK2wk-EzLr6GqeyVpcDtSqDPRVOeMechfn1LpwwHxdTbWZJ3vV1M0NldUA/exec';
+const API_URL    = 'https://script.google.com/macros/s/AKfycbwWXGe6jPa7oLFVIPmzpyVPgMBlI5EmVDoay2umaActymEOk18FoCONXEZi1f8YQvS0Nw/exec';
 const ACCESS_KEY = '7dbfc17c-f1d9-4b3f-b247-83a7bb0a382c';
   // ═══════════════════════════════════════════════════════════
 
@@ -438,7 +438,7 @@ const ACCESS_KEY = '7dbfc17c-f1d9-4b3f-b247-83a7bb0a382c';
     // ===== 비고: 야간작업 체크 시 자동 추가 =====
     const remarkRaw = document.getElementById('remark').value.trim();
     const nightFlag = nightShift.checked;
-    const remarkMerged = [remarkRaw, nightFlag ? '🌙 야간작업' : '']
+    const remarkMerged = [remarkRaw, nightFlag ? '#야간작업' : '']
       .filter(Boolean)
       .join('\n');
 
