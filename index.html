@@ -304,6 +304,18 @@
       <label>🗒️ 비고</label>
       <textarea id="remark" placeholder="기타 참고사항"></textarea>
     </div>
+    <!-- 등록 모드 -->
+    <div class="field">
+      <label>📤 등록 모드</label>
+      <div class="pills" id="submitMode">
+        <div class="pill active" data-value="all">🎫 전체</div>
+        <div class="pill" data-value="clickup">📋 ClickUp+메일</div>
+      </div>
+      <div class="hint" style="margin-top:6px;">
+        • 전체: ClickUp 태스크 + 캘린더 + 메일<br>
+        • ClickUp+메일: 외부에서 받은 업무를 태스크로만 등록 (캘린더 X)
+      </div>
+    </div>
 
     <button class="submit-btn" id="submitBtn">📧 티켓 메일 발송</button>
     <span class="secondary-link" id="draftLink">초안으로만 저장 (검토 후 직접 발송)</span>
@@ -469,6 +481,7 @@ function updateTechLevelPreview() {
     const calendarDescription = [mailSubject, mailBody].filter(Boolean).join('\n\n');
 
 return {
+      submitMode: getActiveValue('submitMode') || 'all',   // all | clickup
       title,
       customer,
       salesPerson,                // ← bpCompany → salesPerson
@@ -523,6 +536,9 @@ function resetForm() {
     // 복수선택 pills 해제
     document.querySelectorAll('#techStack .pill').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('#replyNeed .pill').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('#submitMode .pill').forEach(p => p.classList.remove('active'));
+    const defaultMode = document.querySelector('#submitMode .pill[data-value="all"]');
+    if (defaultMode) defaultMode.classList.add('active');
   }
 
   function submit(asDraft) {
