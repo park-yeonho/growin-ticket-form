@@ -285,15 +285,22 @@
     <!-- 요소기술 (복수선택, 기술레벨 자동 산출) -->
     <div class="field">
       <label>🧩 요소기술 <span class="hint" style="display:inline; margin-left:6px;">(복수 선택 · 기술레벨 자동 산출)</span></label>
-      <div class="pills" id="techStack" data-multi="true">
-        <div class="pill" data-value="linux">🐧 Linux</div>
-        <div class="pill" data-value="HA">🔁 HA</div>
-        <div class="pill" data-value="openstack">☁️ OpenStack</div>
-        <div class="pill" data-value="K8S">⎈ K8S</div>
-        <div class="pill" data-value="OpenShift">🟥 OpenShift</div>
-      </div>
-      <div class="hint" id="techLevelPreview" style="margin-top:8px;">기술레벨: -</div>
-    </div>
+  <div class="pills" id="techStack" data-multi="true">
+  <div class="pill" data-value="linux">🐧 Linux</div>
+  <div class="pill" data-value="HA">🔁 HA</div>
+  <div class="pill" data-value="openstack">☁️ OpenStack</div>
+  <div class="pill" data-value="K8S">⎈ K8S</div>
+  <div class="pill" data-value="OpenShift">🟥 OpenShift</div>
+  <div class="pill" data-value="DBMS">🗄️ DBMS</div>
+  <div class="pill" data-value="DB Maintenance">🔧 DB Maintenance</div>
+  <div class="pill" data-value="DB TroubleShooting">🔍 DB TroubleShooting</div>
+  <div class="pill" data-value="DB Migration">🚚 DB Migration</div>
+  <div class="pill" data-value="DB Consulting">💼 DB Consulting</div>
+  <div class="pill" data-value="WEB/WAS">🌐 WEB/WAS</div>
+  <div class="pill" data-value="Jmeter">⚡ Jmeter</div>
+  <div class="pill" data-value="Kubernetes">☸️ Kubernetes</div>
+  <div class="pill" data-value="CI/CD">🔄 CI/CD</div>
+</div>
 
     <!-- 비고 -->
     <div class="field">
@@ -328,7 +335,7 @@
   //  API_URL    : Apps Script 웹 앱 배포 후 발급된 /exec URL
   //  ACCESS_KEY : Apps Script 스크립트 속성의 ACCESS_KEY 와 동일 값
   // ───────────────────────────────────────────────────────────
-  const API_URL    = 'https://script.google.com/macros/s/AKfycbzNJbSF92yXhmqmq8CzjeZFw2T6jGxX2drt0S5psOiY5-tx7RnrETcxSEvKFEobzACZkQ/exec';
+  const API_URL    = 'https://script.google.com/macros/s/AKfycbzk2FWb64f2NnzcJVgh_IUqNQFTCeleBCYHHGUzgNNfdtrMyjo75Y87zfc9q8-nMx10gw/exec';
   const ACCESS_KEY = '7dbfc17c-f1d9-4b3f-b247-83a7bb0a382c';
   // ═══════════════════════════════════════════════════════════
 
@@ -352,8 +359,22 @@
 
   // 기술레벨 자동 산출 매핑 (요소기술 → 레벨)
   const TECH_LEVEL_BY_STACK = {
-    'linux': 3, 'HA': 4, 'openstack': 7, 'K8S': 8, 'OpenShift': 9
+  'linux':              3,
+  'HA':                 4,
+  'openstack':          7,
+  'K8S':                8,
+  'OpenShift':          9,
+  'DBMS':               2,
+  'DB Maintenance':     3,
+  'DB TroubleShooting': 5,
+  'DB Consulting':      9,
+  'DB Migration':       7,
+  'WEB/WAS':            3,
+  'Jmeter':             5,
+  'Kubernetes':         9,
+  'CI/CD':              9
   };
+
   function computeTechLevel() {
     const stack = Array.from(document.querySelectorAll('#techStack .pill.active'))
       .map(p => p.dataset.value);
@@ -501,9 +522,22 @@
     const remark = document.getElementById('remark').value.trim();
 
     // ===== 기술레벨 자동 산출 (요소기술 기반, max 선택) =====
-    const TECH_LEVEL_BY_STACK = {
-      'linux': 3, 'HA': 4, 'openstack': 7, 'K8S': 8, 'OpenShift': 9
-    };
+   const TECH_LEVEL_BY_STACK = {
+  'linux':              3,
+  'HA':                 4,
+  'openstack':          7,
+  'K8S':                8,
+  'OpenShift':          9,
+  'DBMS':               2,
+  'DB Maintenance':     3,
+  'DB TroubleShooting': 5,
+  'DB Migration':       7,
+  'WEB/WAS':            3,
+  'Jmeter':             5,
+  'Kubernetes':         9,
+  'CI/CD':              9
+   };
+
     const techStack = getActiveValues('techStack');
     const maxLevel = techStack.reduce((m, v) => Math.max(m, TECH_LEVEL_BY_STACK[v] || 0), 0);
     const techLevel = maxLevel > 0 ? `L${maxLevel}` : '';
