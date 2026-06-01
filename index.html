@@ -335,7 +335,7 @@
   //  API_URL    : Apps Script 웹 앱 배포 후 발급된 /exec URL
   //  ACCESS_KEY : Apps Script 스크립트 속성의 ACCESS_KEY 와 동일 값
   // ───────────────────────────────────────────────────────────
-  const API_URL    = 'https://script.google.com/macros/s/AKfycbzk2FWb64f2NnzcJVgh_IUqNQFTCeleBCYHHGUzgNNfdtrMyjo75Y87zfc9q8-nMx10gw/exec';
+  const API_URL    = 'https://script.google.com/macros/s/AKfycbwQdNJt7HL27B3NQz51vYJX0xUcz8FuTiCsTL0QOiAbfKmnZAIssihUSj_6CCVRiqJW/exec';
   const ACCESS_KEY = '7dbfc17c-f1d9-4b3f-b247-83a7bb0a382c';
   // ═══════════════════════════════════════════════════════════
 
@@ -549,7 +549,7 @@
     //   - 고객사 / 장소가 비어있으면 해당 자리 생략
     const customerForTitle = customer.split('_')[0].trim();
     const titleParts = [customerForTitle, location, title].filter(Boolean);
-    const calendarTitle = '#[미정] ' + titleParts.join(' ');
+    const calendarTitle = (startDt ? '#[미정] ' : '시간#[미정] ') + titleParts.join(' ');
     // 장소: 폼의 장소 그대로
     const calendarLocation = location;
     // 설명: 메일제목 + 빈 줄 + 메일전체내용
