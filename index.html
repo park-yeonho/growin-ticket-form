@@ -385,7 +385,7 @@
     <div class="tickets-row" id="ticketsRow">
       <!-- 빈 상태 -->
       <div class="empty-state" id="emptyState">
-        <div class="icon"></div>
+        <div class="icon">📬</div>
         <p>왼쪽에 메일을 붙여넣고<br><strong>파싱 후 티켓 자동 채우기</strong>를 클릭하세요</p>
       </div>
     </div>
@@ -396,11 +396,11 @@
   <div style="background:white;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.08);padding:16px;display:flex;flex-direction:column;gap:10px;">
     <div style="display:flex;gap:12px;align-items:center;">
       <button id="submitAllBtn" onclick="submitAllTickets()" style="padding:13px 28px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;">
-         전체 티켓 발행
+        🚀 전체 티켓 발행
       </button>
     </div>
     <button onclick="resetTickets()" style="align-self:flex-start;padding:9px 18px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">
-       초기화
+      🔄 초기화
     </button>
   </div>
 </div>
@@ -632,7 +632,7 @@ function createTicketCard(data, num, mailBodyOriginal, total) {
   }).join('');
 
   const replyHTML = [
-    ['작업자',' 작업자'],['절차서',' 절차서'],['질문답변',' 질문답변'],['점검 작업',' 점검 작업']
+    ['작업자','👷 작업자'],['절차서','📋 절차서'],['질문답변','💬 질문답변'],['점검 작업','🔍 점검 작업']
   ].map(([v, label]) => {
     const active = (data.replyNeed || []).includes(v) ? 'active' : '';
     return `<div class="pill ${active}" data-value="${v}" onclick="togglePill(this,'${id}_reply')">${label}</div>`;
@@ -647,7 +647,7 @@ function createTicketCard(data, num, mailBodyOriginal, total) {
 
   div.innerHTML = `
     <div class="ticket-header">
-      <div class="ticket-icon"></div>
+      <div class="ticket-icon">🎫</div>
       <div>
         <h3>작업 새 티켓 발행</h3>
         <p>고객 작업 요청을 티켓으로 발행합니다</p>
@@ -657,12 +657,12 @@ function createTicketCard(data, num, mailBodyOriginal, total) {
     <div class="ticket-body">
 
       <div class="field">
-        <label> 작업명 <span class="required">*</span></label>
+        <label>📝 작업명 <span class="required">*</span></label>
         <input type="text" id="${id}_title" value="${esc(data.taskName || '')}" placeholder="예) VPN 접속 장애" required>
       </div>
 
       <div class="field">
-        <label> 고객사 <span class="required">*</span></label>
+        <label>🏢 고객사 <span class="required">*</span></label>
         <input type="text" id="${id}_customer" list="${id}_customerList"
           value="${esc(data.client || '')}" placeholder="예) 텔코웨어_SKT" autocomplete="off" required>
         <datalist id="${id}_customerList">
@@ -673,14 +673,14 @@ function createTicketCard(data, num, mailBodyOriginal, total) {
       <input type="hidden" id="${id}_mailSubject" value="${esc(data.mailSubject || '')}">
 
       <div class="field">
-        <label> 메일 전체내용</label>
+        <label>📩 메일 전체내용</label>
         <textarea id="${id}_mailBody" style="min-height:80px;">${esc(mailBodyOriginal)}</textarea>
         <div class="hint">붙여넣은 내용은 ClickUp Description에 들어갑니다</div>
       </div>
 
       <div class="row">
         <div class="field">
-          <label> 작업 시작 <span class="hint" style="display:inline;margin-left:4px;">(24h)</span></label>
+          <label>📅 작업 시작 <span class="hint" style="display:inline;margin-left:4px;">(24h)</span></label>
           <input type="datetime-local" id="${id}_workDateTime" value="${dtVal}" onchange="updateEndDateTime('${id}')">
         </div>
         <div class="field">
@@ -693,7 +693,7 @@ function createTicketCard(data, num, mailBodyOriginal, total) {
         <label class="checkbox-row" for="${id}_nightShift">
           <input type="checkbox" id="${id}_nightShift" ${isNight ? 'checked' : ''}
             onchange="applyNightShift('${id}')">
-          <span> 야간 작업</span>
+          <span>🌙 야간 작업</span>
         </label>
       </div>
 
@@ -707,64 +707,64 @@ function createTicketCard(data, num, mailBodyOriginal, total) {
       </div>
 
       <div class="field">
-        <label> 장소</label>
+        <label>📍 장소</label>
         <input type="text" id="${id}_location" value="${esc(data.location || '')}" placeholder="장소">
       </div>
 
       <div class="field">
-        <label> 계약유형 <span class="required">*</span></label>
+        <label>📄 계약유형 <span class="required">*</span></label>
         <div class="pills" id="${id}_contract">
           <div class="pill ${data.contractType !== 'percall' ? 'active' : ''}"
-            data-value="유지보수" onclick="selectPill(this,'${id}_contract')">️ 유지보수</div>
+            data-value="유지보수" onclick="selectPill(this,'${id}_contract')">🛠️ 유지보수</div>
           <div class="pill ${data.contractType === 'percall' ? 'active' : ''}"
-            data-value="percall" onclick="selectPill(this,'${id}_contract')"> Per-call</div>
+            data-value="percall" onclick="selectPill(this,'${id}_contract')">📞 Per-call</div>
         </div>
       </div>
 
       <div class="row">
         <div class="field">
-          <label> 요청자</label>
+          <label>👤 요청자</label>
           <input type="text" id="${id}_requester" value="${esc(data.requester || '')}" placeholder="홍길동">
         </div>
         <div class="field">
-          <label> 이메일</label>
+          <label>📧 이메일</label>
           <input type="email" id="${id}_requesterEmail" placeholder="hong@growin.co.kr" value="${esc(data.requesterEmail || '')}">
           <input type="hidden" id="${id}_mailReceivedTime" value="${esc(data.mailReceivedTime || '')}">
         </div>
       </div>
 
       <div class="field">
-        <label> 회신필요항목 <span class="required">*</span></label>
+        <label>📨 회신필요항목 <span class="required">*</span></label>
         <div class="pills" id="${id}_reply" data-multi="true">${replyHTML}</div>
       </div>
 
       <div class="field">
-        <label> 배정인원</label>
+        <label>👥 배정인원</label>
         <input type="text" id="${id}_assignees" value="${esc(data.assignees || '')}" placeholder="예) 홍길동, 김철수">
       </div>
 
       <div class="field">
-        <label>里 요소기술</label>
+        <label>🧩 요소기술</label>
         <div class="pills pills-tech" id="${id}_tech" data-multi="true">${techStackHTML}</div>
       </div>
 
       <div class="field">
-        <label>️ 비고</label>
+        <label>🗒️ 비고</label>
         <textarea id="${id}_remark" placeholder="기타 참고사항">${esc(data.remark || '')}</textarea>
       </div>
 
       <div class="field">
-        <label> 등록 모드</label>
+        <label>📤 등록 모드</label>
         <div class="pills" id="${id}_mode">
           <div class="pill ${modeVal === 'all' ? 'active' : ''}"
-            data-value="all" onclick="selectPill(this,'${id}_mode')"> 전체</div>
+            data-value="all" onclick="selectPill(this,'${id}_mode')">🎫 전체</div>
           <div class="pill ${modeVal === 'clickup' ? 'active' : ''}"
-            data-value="clickup" onclick="selectPill(this,'${id}_mode')"> ClickUp+메일</div>
+            data-value="clickup" onclick="selectPill(this,'${id}_mode')">📋 ClickUp+메일</div>
         </div>
       </div>
 
       <button class="submit-btn" id="${id}_submitBtn" onclick="submitTicket('${id}')">
-         티켓 메일 발송
+        📧 티켓 메일 발송
       </button>
       
     </div>
@@ -949,7 +949,7 @@ function submitTicket(id, asDraft = false) {
   const finishErr = (msg) => {
     showToast('❌ ' + msg, 'error');
     btn.disabled = false;
-    btn.textContent = ' 티켓 메일 발송';
+    btn.textContent = '📧 티켓 메일 발송';
   };
 
   if (typeof google !== 'undefined' && google.script?.run) {
@@ -985,7 +985,7 @@ function submitAllTickets() {
 
   const btn = document.getElementById('submitAllBtn');
   btn.disabled = true;
-  btn.textContent = ' 발송 중...';
+  btn.textContent = '🚀 발송 중...';
 
   const cardBtns = ids.map(id => document.getElementById(`${id}_submitBtn`));
 
@@ -1003,7 +1003,7 @@ function submitAllTickets() {
   const finishErr = (msg) => {
     showToast('❌ ' + msg, 'error');
     btn.disabled = false;
-    btn.textContent = ' 전체 티켓 발행';
+    btn.textContent = '🚀 전체 티켓 발행';
   };
 
   fetch(API_URL, {
